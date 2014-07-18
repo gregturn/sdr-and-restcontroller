@@ -1,5 +1,7 @@
 This app reproduces a problem when mixing Spring Data REST with an app using @RestController.
 
+== Reproducing the problem
+
 When *spring-data-rest* is commented out of `build.gradle`, this is the observed behavior:
 
 ----
