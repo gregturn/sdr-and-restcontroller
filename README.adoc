@@ -48,3 +48,336 @@ Date: Fri, 18 Jul 2014 18:36:18 GMT
 * The *id* attribute is suppressed.
 
 This appears to show that Spring Data REST's serialization is kicking in, even though the controller being exercised isn't part of SDR's setup.
+
+== More analysis
+
+With the following steps, we can get an auto-configuration report from Boot to analzse what is happening.
+
+. ./gradlew build
+. java -jar build/libs/sdr-with-restcontroller-0.0.1-SNAPSHOT.jar --debug
+. Capture console output
+
+----
+=========================
+AUTO-CONFIGURATION REPORT
+=========================
+
+
+Positive matches:
+-----------------
+
+   AopAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.context.annotation.EnableAspectJAutoProxy,org.aspectj.lang.annotation.Aspect,org.aspectj.lang.reflect.Advice (OnClassCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.aop.AopAutoConfiguration: ${spring.aop.auto:true} (OnExpressionCondition)
+
+   AopAutoConfiguration.JdkDynamicAutoProxyConfiguration
+      - SpEL expression on org.springframework.boot.autoconfigure.aop.AopAutoConfiguration$JdkDynamicAutoProxyConfiguration: !${spring.aop.proxyTargetClass:false} (OnExpressionCondition)
+
+   DataSourceAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType (OnClassCondition)
+
+   DataSourceAutoConfiguration.DataSourceInitializerConfiguration
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.jdbc.DataSourceInitializer; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration.JdbcTemplateConfiguration
+      - existing auto database detected (DataSourceAutoConfiguration.DatabaseCondition)
+
+   DataSourceAutoConfiguration.JdbcTemplateConfiguration#jdbcTemplate
+      - @ConditionalOnMissingBean (types: org.springframework.jdbc.core.JdbcOperations; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration.JdbcTemplateConfiguration#namedParameterJdbcTemplate
+      - @ConditionalOnMissingBean (types: org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   DataSourceAutoConfiguration.NonEmbeddedConfiguration
+      - Supported DataSource class found (DataSourceAutoConfiguration.NonEmbeddedDatabaseCondition)
+      - @ConditionalOnMissingBean (types: javax.sql.DataSource; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   DataSourceTransactionManagerAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.jdbc.core.JdbcTemplate,org.springframework.transaction.PlatformTransactionManager (OnClassCondition)
+
+   DataSourceTransactionManagerAutoConfiguration.TransactionManagementConfiguration
+      - @ConditionalOnMissingBean (types: org.springframework.transaction.annotation.AbstractTransactionManagementConfiguration; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   DispatcherServletAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - @ConditionalOnClass classes found: org.springframework.web.servlet.DispatcherServlet (OnClassCondition)
+
+   DispatcherServletAutoConfiguration.DispatcherServletConfiguration
+      - no ServletRegistrationBean found (DispatcherServletAutoConfiguration.DefaultDispatcherServletCondition)
+      - @ConditionalOnClass classes found: javax.servlet.ServletRegistration (OnClassCondition)
+
+   EmbeddedServletContainerAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+
+   EmbeddedServletContainerAutoConfiguration.EmbeddedTomcat
+      - @ConditionalOnClass classes found: javax.servlet.Servlet,org.apache.catalina.startup.Tomcat (OnClassCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.boot.context.embedded.EmbeddedServletContainerFactory; SearchStrategy: current) found no beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration
+      - @ConditionalOnClass classes found: javax.servlet.Servlet,org.springframework.web.servlet.DispatcherServlet (OnClassCondition)
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+
+   ErrorMvcAutoConfiguration#basicErrorController
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.ErrorController; SearchStrategy: current) found no beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration#errorAttributes
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.ErrorAttributes; SearchStrategy: current) found no beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration
+      - No error template view detected (ErrorMvcAutoConfiguration.ErrorTemplateMissingCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration$WhitelabelErrorViewConfiguration: ${error.whitelabel.enabled:true} (OnExpressionCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration#beanNameViewResolver
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.view.BeanNameViewResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration#defaultErrorView
+      - @ConditionalOnMissingBean (names: error; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   HibernateJpaAutoConfiguration
+      - found HibernateEntityManager class (HibernateJpaAutoConfiguration.HibernateEntityManagerCondition)
+      - @ConditionalOnClass classes found: org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean,org.springframework.transaction.annotation.EnableTransactionManagement,javax.persistence.EntityManager (OnClassCondition)
+
+   HttpMessageConvertersAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.http.converter.HttpMessageConverter (OnClassCondition)
+
+   HttpMessageConvertersAutoConfiguration#messageConverters
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.HttpMessageConverters; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   HttpMessageConvertersAutoConfiguration.ObjectMappers
+      - @ConditionalOnClass classes found: com.fasterxml.jackson.databind.ObjectMapper (OnClassCondition)
+
+   HypermediaAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.hateoas.Resource,org.springframework.web.bind.annotation.RequestMapping,org.springframework.plugin.core.Plugin (OnClassCondition)
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+
+   JacksonAutoConfiguration
+      - @ConditionalOnClass classes found: com.fasterxml.jackson.databind.ObjectMapper (OnClassCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperAutoConfiguration
+      - @ConditionalOnClass classes found: com.fasterxml.jackson.databind.ObjectMapper (OnClassCondition)
+
+   JmxAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.jmx.export.MBeanExporter (OnClassCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration: ${spring.jmx.enabled:true} (OnExpressionCondition)
+
+   JmxAutoConfiguration#mbeanServer
+      - @ConditionalOnMissingBean (types: javax.management.MBeanServer; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JmxAutoConfiguration#objectNamingStrategy
+      - @ConditionalOnMissingBean (types: org.springframework.jmx.export.naming.ObjectNamingStrategy; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaBaseConfiguration#entityManagerFactory
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaBaseConfiguration#entityManagerFactoryBuilder
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilder; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaBaseConfiguration#jpaVendorAdapter
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.JpaVendorAdapter; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaBaseConfiguration#transactionManager
+      - @ConditionalOnMissingBean (types: org.springframework.transaction.PlatformTransactionManager; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaBaseConfiguration.JpaWebConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration: ${spring.jpa.openInView:${spring.jpa.open_in_view:true}} (OnExpressionCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor,org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaRepositoriesAutoConfiguration
+      - @ConditionalOnClass classes found: org.springframework.data.jpa.repository.JpaRepository (OnClassCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration: ${spring.data.jpa.repositories.enabled:true} (OnExpressionCondition)
+      - @ConditionalOnBean (types: javax.sql.DataSource; SearchStrategy: all) found the following [dataSource] @ConditionalOnMissingBean (types: org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   JpaRepositoriesAutoConfiguration.JpaWebConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.data.web.PageableHandlerMethodArgumentResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   MultipartAutoConfiguration
+      - @ConditionalOnClass classes found: javax.servlet.Servlet,org.springframework.web.multipart.support.StandardServletMultipartResolver,javax.servlet.MultipartConfigElement (OnClassCondition)
+      - SpEL expression on org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration: ${multipart.enabled:true} (OnExpressionCondition)
+
+   MultipartAutoConfiguration#multipartConfigElement
+      - @ConditionalOnMissingBean (types: javax.servlet.MultipartConfigElement; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   MultipartAutoConfiguration#multipartResolver
+      - @ConditionalOnMissingBean (types: org.springframework.web.multipart.support.StandardServletMultipartResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   PropertyPlaceholderAutoConfiguration#propertySourcesPlaceholderConfigurer
+      - @ConditionalOnMissingBean (types: org.springframework.context.support.PropertySourcesPlaceholderConfigurer; SearchStrategy: current) found no beans (OnBeanCondition)
+
+   RepositoryRestMvcAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - @ConditionalOnClass classes found: org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration (OnClassCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   ServerPropertiesAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+
+   ServerPropertiesAutoConfiguration#serverProperties
+      - @ConditionalOnMissingBean (types: org.springframework.boot.autoconfigure.web.ServerProperties; SearchStrategy: current) found no beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - @ConditionalOnClass classes found: javax.servlet.Servlet,org.springframework.web.servlet.DispatcherServlet,org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter (OnClassCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration#hiddenHttpMethodFilter
+      - @ConditionalOnMissingBean (types: org.springframework.web.filter.HiddenHttpMethodFilter; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#beanNameViewResolver
+      - @ConditionalOnBean (types: org.springframework.web.servlet.View; SearchStrategy: all) found the following [error] (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#defaultViewResolver
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.view.InternalResourceViewResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#requestContextListener
+      - @ConditionalOnMissingBean (types: org.springframework.web.context.request.RequestContextListener; SearchStrategy: all) found no beans (OnBeanCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#viewResolver
+      - @ConditionalOnBean (types: org.springframework.web.servlet.ViewResolver; SearchStrategy: all) found the following [beanNameViewResolver, defaultViewResolver] @ConditionalOnMissingBean (names: viewResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+   ActiveMQAutoConfiguration
+      - required @ConditionalOnClass classes not found: javax.jms.ConnectionFactory,org.apache.activemq.ActiveMQConnectionFactory (OnClassCondition)
+
+   AopAutoConfiguration.CglibAutoProxyConfiguration
+      - SpEL expression on org.springframework.boot.autoconfigure.aop.AopAutoConfiguration$CglibAutoProxyConfiguration: ${spring.aop.proxyTargetClass:false} (OnExpressionCondition)
+
+   BatchAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.batch.core.launch.JobLauncher (OnClassCondition)
+
+   DataSourceAutoConfiguration.EmbeddedConfiguration
+      - existing non-embedded database detected (DataSourceAutoConfiguration.EmbeddedDatabaseCondition)
+
+   DataSourceTransactionManagerAutoConfiguration#transactionManager
+      - @ConditionalOnMissingBean (names: transactionManager; SearchStrategy: all) found the following [transactionManager] (OnBeanCondition)
+
+   DeviceDelegatingViewResolverAutoConfiguration
+      - found web application StandardServletEnvironment (OnWebApplicationCondition)
+      - required @ConditionalOnClass classes not found: org.springframework.mobile.device.view.LiteDeviceDelegatingViewResolver (OnClassCondition)
+
+   DeviceResolverAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.mobile.device.DeviceResolverHandlerInterceptor,org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver (OnClassCondition)
+
+   ElasticsearchAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.elasticsearch.client.Client,org.springframework.data.elasticsearch.client.TransportClientFactoryBean,org.springframework.data.elasticsearch.client.NodeClientFactoryBean (OnClassCondition)
+
+   ElasticsearchDataAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.elasticsearch.client.Client,org.springframework.data.elasticsearch.core.ElasticsearchTemplate (OnClassCondition)
+
+   ElasticsearchRepositoriesAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.elasticsearch.client.Client,org.springframework.data.elasticsearch.repository.ElasticsearchRepository (OnClassCondition)
+
+   EmbeddedServletContainerAutoConfiguration.EmbeddedJetty
+      - required @ConditionalOnClass classes not found: org.eclipse.jetty.server.Server,org.eclipse.jetty.util.Loader (OnClassCondition)
+
+   FacebookAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.social.config.annotation.SocialConfigurerAdapter,org.springframework.social.facebook.connect.FacebookConnectionFactory (OnClassCondition)
+
+   FallbackWebSecurityAutoConfiguration
+      - SpEL expression on org.springframework.boot.autoconfigure.security.FallbackWebSecurityAutoConfiguration: !${security.basic.enabled:true} (OnExpressionCondition)
+
+   FlywayAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.flywaydb.core.Flyway (OnClassCondition)
+
+   FreeMarkerAutoConfiguration
+      - required @ConditionalOnClass classes not found: freemarker.template.Configuration,org.springframework.ui.freemarker.FreeMarkerConfigurationFactory (OnClassCondition)
+
+   GroovyTemplateAutoConfiguration
+      - required @ConditionalOnClass classes not found: groovy.text.TemplateEngine (OnClassCondition)
+
+   HornetQAutoConfiguration
+      - required @ConditionalOnClass classes not found: javax.jms.ConnectionFactory,org.hornetq.api.jms.HornetQJMSClient (OnClassCondition)
+
+   HttpMessageConvertersAutoConfiguration.ObjectMappers#mappingJackson2HttpMessageConverter
+      - @ConditionalOnMissingBean (types: org.springframework.http.converter.json.MappingJackson2HttpMessageConverter; SearchStrategy: all) found the following [jacksonHttpMessageConverter, halJacksonHttpMessageConverter] (OnBeanCondition)
+
+   HypermediaAutoConfiguration.EntityLinksConfiguration
+      - @ConditionalOnMissingBean (types: org.springframework.hateoas.EntityLinks; SearchStrategy: all) found the following [entityLinks, delegatingEntityLinks, controllerEntityLinks] (OnBeanCondition)
+
+   HypermediaAutoConfiguration.HypermediaConfiguration
+      - @ConditionalOnMissingBean (types: org.springframework.hateoas.LinkDiscoverers; SearchStrategy: all) found the following [org.springframework.hateoas.LinkDiscoverers#0] (OnBeanCondition)
+
+   IntegrationAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.integration.config.EnableIntegration (OnClassCondition)
+
+   JacksonAutoConfiguration.JacksonObjectMapperAutoConfiguration#jacksonObjectMapper
+      - @ConditionalOnMissingBean (types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) found the following [objectMapper, halObjectMapper, _halObjectMapper] (OnBeanCondition)
+
+   JacksonAutoConfiguration.JodaModuleAutoConfiguration
+      - required @ConditionalOnClass classes not found: com.fasterxml.jackson.datatype.joda.JodaModule (OnClassCondition)
+
+   JacksonAutoConfiguration.Jsr310ModuleAutoConfiguration
+      - Required JVM version 1.8 or newer found 1.8 (OnJavaCondition)
+      - required @ConditionalOnClass classes not found: com.fasterxml.jackson.datatype.jsr310.JSR310Module (OnClassCondition)
+
+   JmsAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.jms.core.JmsTemplate (OnClassCondition)
+
+   JmxAutoConfiguration#mbeanExporter
+      - @ConditionalOnMissingBean (types: org.springframework.jmx.export.MBeanExporter; SearchStrategy: current) found the following [mbeanExporter] (OnBeanCondition)
+
+   LinkedInAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.social.config.annotation.SocialConfigurerAdapter,org.springframework.social.linkedin.connect.LinkedInConnectionFactory (OnClassCondition)
+
+   LiquibaseAutoConfiguration
+      - required @ConditionalOnClass classes not found: liquibase.integration.spring.SpringLiquibase (OnClassCondition)
+
+   MessageSourceAutoConfiguration
+      - Bundle found for spring.messages.basename: messages (MessageSourceAutoConfiguration.ResourceBundleCondition)
+
+   MongoAutoConfiguration
+      - required @ConditionalOnClass classes not found: com.mongodb.Mongo (OnClassCondition)
+
+   MongoDataAutoConfiguration
+      - required @ConditionalOnClass classes not found: com.mongodb.Mongo,org.springframework.data.mongodb.core.MongoTemplate (OnClassCondition)
+
+   MongoRepositoriesAutoConfiguration
+      - required @ConditionalOnClass classes not found: com.mongodb.Mongo,org.springframework.data.mongodb.repository.MongoRepository (OnClassCondition)
+
+   RabbitAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.amqp.rabbit.core.RabbitTemplate,com.rabbitmq.client.Channel (OnClassCondition)
+
+   ReactorAutoConfiguration
+      - required @ConditionalOnClass classes not found: reactor.spring.context.config.EnableReactor (OnClassCondition)
+
+   RedisAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.data.redis.connection.jedis.JedisConnection,org.springframework.data.redis.core.RedisOperations,redis.clients.jedis.Jedis (OnClassCondition)
+
+   SecurityAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.security.authentication.AuthenticationManager (OnClassCondition)
+
+   SitePreferenceAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor,org.springframework.mobile.device.site.SitePreferenceHandlerMethodArgumentResolver (OnClassCondition)
+
+   SocialWebAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.social.connect.web.ConnectController,org.springframework.social.config.annotation.SocialConfigurerAdapter (OnClassCondition)
+
+   SolrAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.apache.solr.client.solrj.impl.HttpSolrServer,org.apache.solr.client.solrj.impl.CloudSolrServer (OnClassCondition)
+
+   SolrRepositoriesAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.apache.solr.client.solrj.SolrServer,org.springframework.data.solr.repository.SolrRepository (OnClassCondition)
+
+   ThymeleafAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.thymeleaf.spring4.SpringTemplateEngine (OnClassCondition)
+
+   TwitterAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.social.config.annotation.SocialConfigurerAdapter,org.springframework.social.twitter.connect.TwitterConnectionFactory (OnClassCondition)
+
+   VelocityAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.apache.velocity.app.VelocityEngine,org.springframework.ui.velocity.VelocityEngineFactory (OnClassCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#dateFormatter
+      - @ConditionalOnProperty missing required properties: date-format not found (OnPropertyCondition)
+
+   WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#localeResolver
+      - @ConditionalOnMissingBean (types: org.springframework.web.servlet.LocaleResolver; SearchStrategy: all) found no beans (OnBeanCondition)
+      - @ConditionalOnProperty missing required properties: locale not found (OnPropertyCondition)
+
+   WebSocketAutoConfiguration
+      - required @ConditionalOnClass classes not found: org.springframework.web.socket.WebSocketHandler,org.apache.tomcat.websocket.server.WsSci (OnClassCondition)
+----
