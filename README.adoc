@@ -1,0 +1,48 @@
+This app reproduces a problem when mixing Spring Data REST with an app using @RestController.
+
+When *spring-data-rest* is commented out of `build.gradle`, this is the observed behavior:
+
+----
+$ ./gradlew bootRun
+...
+<app starts up>
+----
+
+In another shell, do this:
+
+----
+$ curl -i localhost:8080/hobbit/Frodo
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Fri, 18 Jul 2014 18:36:49 GMT
+
+{"id":2,"firstName":"Frodo","lastName":"Baggins"}
+----
+
+* The content-type is *application/json*
+* The JSON it self isn't formatted but instead compressed.
+* The *id* attribute is printed out
+
+Uncomment *spring-data-rest* and re-run the app, and this is what's observed:
+
+----
+$ curl -i localhost:8080/hobbit/Frodo
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: application/hal+json
+Transfer-Encoding: chunked
+Date: Fri, 18 Jul 2014 18:36:18 GMT
+
+{
+  "firstName" : "Frodo",
+  "lastName" : "Baggins"
+}
+----
+
+* The content-type changes to *application/hal+json*
+* The JSON is getting pretty-printed.
+* The *id* attribute is suppressed.
+
+This appears to show that Spring Data REST's serialization is kicking in, even though the controller being exercised isn't part of SDR's setup.
